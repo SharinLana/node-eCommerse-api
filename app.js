@@ -1,3 +1,4 @@
+require("express-async-errors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const express = require("express");
@@ -9,7 +10,13 @@ mongoose.set("strictQuery", true);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+const notFound = require("./middleware/not-found");
+const errorHandler = require("./middleware/error-handler");
+
 const port = process.env.PORT || 5100;
+
+app.use(errorHandler);
+app.use(notFound);
 
 const start = async () => {
   try {
