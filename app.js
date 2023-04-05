@@ -15,6 +15,10 @@ const errorHandler = require("./middleware/error-handler");
 
 const port = process.env.PORT || 5100;
 
+app.get("/", (req, res) => {
+    res.send("Hello!")
+})
+
 app.use(errorHandler);
 app.use(notFound);
 
