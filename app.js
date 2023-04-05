@@ -6,6 +6,9 @@ const app = express();
 dotenv.config();
 mongoose.set("strictQuery", true);
 
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 const port = process.env.PORT || 5100;
 
 const start = async () => {
