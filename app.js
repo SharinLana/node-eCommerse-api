@@ -2,6 +2,7 @@ require("express-async-errors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const express = require("express");
+const morgan = require("morgan");
 
 const app = express();
 dotenv.config();
@@ -15,9 +16,14 @@ const errorHandler = require("./middleware/error-handler");
 
 const port = process.env.PORT || 5100;
 
+// Activate morgan
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
+
 app.get("/", (req, res) => {
-    res.send("Hello!")
-})
+  res.send("Hello!");
+});
 
 app.use(errorHandler);
 app.use(notFound);
