@@ -11,6 +11,7 @@ mongoose.set("strictQuery", true);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+const authRouter = require("./routes/auth-routes");
 const notFound = require("./middleware/not-found");
 const errorHandler = require("./middleware/error-handler");
 
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+app.use("/api/v1/auth", authRouter);
 app.use(errorHandler);
 app.use(notFound);
 
