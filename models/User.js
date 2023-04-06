@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
     minLength: [6, "Password cannot be shorter that 6 characters!"],
     trim: true,
   },
+  role: {
+    type: String,
+    enum: ["admin", "user"],
+    default: "user",
+  },
 });
 
 const User = mongoose.model("User", userSchema);
