@@ -20,7 +20,10 @@ const register = async (req, res) => {
 
   const user = await User.create({ email, name, password, role }); // to secure the role (by preventing the user to register as admin)
 
+  const token = user.createJWT();
+
   res.status(StatusCodes.CREATED).json({
+    token,
     user,
   });
 };
