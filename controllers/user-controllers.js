@@ -12,6 +12,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
+//   console.log(req.user);
   const user = await User.findOne({ _id: req.params.id }).select("-password");
   if (!user) {
     throw new NotFoundError(`No user with id: ${req.params.id}`);
