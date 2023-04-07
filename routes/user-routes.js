@@ -1,4 +1,5 @@
 const express = require("express");
+const authenticateUser = require("../middleware/authentication");
 const {
   getAllUsers,
   getSingleUser,
@@ -9,12 +10,12 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAllUsers);
+router.route("/").get(authenticateUser, getAllUsers);
 
 router.route("/showMe").get(showCurrentUser);
 router.route("/updateUser").post(updateUser);
 router.route("/updateUserPassword").post(updateUserPassword);
 
-router.route("/:id").get(getSingleUser);
+router.route("/:id").get(authenticateUser, getSingleUser);
 
 module.exports = router;
