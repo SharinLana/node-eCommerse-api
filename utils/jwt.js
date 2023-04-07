@@ -18,6 +18,8 @@ const attachCookiesToResponse = ({ res, tokenPayload }) => {
   res.cookie("token", token, {
     httpOnly: true,
     expires: new Date(Date.now() + oneDay),
+    secure: process.env.NODE_ENV === "production", // to secure the cookies from modifying in the browser
+    signed: true,
   });
 };
 

@@ -11,7 +11,7 @@ mongoose.set("strictQuery", true);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET));
 
 const authRouter = require("./routes/auth-routes");
 const notFound = require("./middleware/not-found");
@@ -24,7 +24,8 @@ if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
-app.get("/", (req, res) => {
+app.get("/api/v1", (req, res) => {
+  // console.log(req.signedCookies)
   res.send("Hello!");
 });
 
