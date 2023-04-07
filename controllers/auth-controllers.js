@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
 const { BadRequestError, UnauthenticatedError } = require("../errors/index");
 const { attachCookiesToResponse } = require("../utils/jwt");
+const createTokenPayload = require("../utils/tokenPayload");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -20,12 +21,11 @@ const register = async (req, res) => {
   const role = isFirstAccount ? "admin" : "user";
 
   const user = await User.create({ email, name, password, role }); // to secure the role (by preventing the user to register as admin)
-  const tokenPayload = { name: user.name, userId: user._id, role: user.role };
-
+  const tokenPayload = createTokenPayload(user);
   attachCookiesToResponse({ res, tokenPayload });
 
   res.status(StatusCodes.CREATED).json({
-    user,
+    user: tokenPayload,
   });
 };
 
@@ -45,12 +45,11 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Incorrect password!");
   }
 
-  const tokenPayload = { name: user.name, userId: user._id, role: user.role };
-
+  const tokenPayload = createTokenPayload(user);
   attachCookiesToResponse({ res, tokenPayload });
 
   res.status(StatusCodes.OK).json({
-    user,
+    user: tokenPayload,
   });
 };
 
