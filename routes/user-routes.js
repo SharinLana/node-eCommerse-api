@@ -9,6 +9,6 @@ const {
 
 const router = express.Router();
 
-router.route("/", getAllUsers);
+router.route("/").get(getAllUsers);
 
 module.exports = router;
