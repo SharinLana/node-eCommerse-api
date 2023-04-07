@@ -5,11 +5,17 @@ const authenticateUser = async (req, res, next) => {
   const token = req.signedCookies.token;
 
   if (!token) {
-    console.log("error, no token present!");
-  } else {
-    console.log("token present");
+    throw new CustomAPIError.UnauthenticatedError("Authentication invalid!");
   }
-  next();
+
+  try {
+    const payload = isTokenValid({ token });
+    // console.log(payload);
+    req.user = { name: payload.name, userId: payload._id, role: payload.role };
+    next();
+  } catch (err) {
+    throw new CustomAPIError.UnauthenticatedError("Authentication invalid!");
+  }
 };
 
 module.exports = authenticateUser;
