@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
 const { BadRequestError } = require("../errors/index");
+const { createJWT, isTokenValid } = require("../utils/jwt");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -19,8 +20,8 @@ const register = async (req, res) => {
   const role = isFirstAccount ? "admin" : "user";
 
   const user = await User.create({ email, name, password, role }); // to secure the role (by preventing the user to register as admin)
-
-  const token = user.createJWT();
+  const tokenPayload = { name: user.name, userId: user._id, role: user.role };
+  const token = createJWT({ payload: tokenPayload });
 
   res.status(StatusCodes.CREATED).json({
     token,
