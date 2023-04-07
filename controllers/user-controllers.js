@@ -4,7 +4,7 @@ const getAllUsers = async (req, res) => {
   res.send("Get all users");
 };
 
-const getSinglaUser = async (req, res) => {
+const getSingleUser = async (req, res) => {
   res.send("Get a user");
 };
 
@@ -22,7 +22,7 @@ const updateUserPassword = async (req, res) => {
 
 module.exports = {
   getAllUsers,
-  getSinglaUser,
+  getSingleUser,
   showCurrentUser,
   updateUser,
   updateUserPassword,
