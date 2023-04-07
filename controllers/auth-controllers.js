@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
-const { BadRequestError } = require("../errors/index");
+const { BadRequestError, UnauthenticatedError } = require("../errors/index");
 const { attachCookiesToResponse } = require("../utils/jwt");
 
 const register = async (req, res) => {
@@ -30,7 +30,28 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  res.send("Login");
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new BadRequestError("Please provide the email and password!");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new BadRequestError("No user found with this email");
+  }
+
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError("Incorrect password!");
+  }
+
+  const tokenPayload = { name: user.name, userId: user._id, role: user.role };
+
+  attachCookiesToResponse({ res, tokenPayload });
+
+  res.status(StatusCodes.OK).json({
+    user,
+  });
 };
 
 const logout = async (req, res) => {
