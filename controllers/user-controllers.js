@@ -12,16 +12,16 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-//   console.log(req.user);
+  //   console.log(req.user);
   const user = await User.findOne({ _id: req.params.id }).select("-password");
   if (!user) {
     throw new NotFoundError(`No user with id: ${req.params.id}`);
   }
   res.status(StatusCodes.OK).json({ user });
 };
-
+// Checking if the user exists to direct him to the restricted route
 const showCurrentUser = async (req, res) => {
-  res.send("Show current user");
+  res.status(StatusCodes.OK).json({ user: req.user }); // more stuff can be added to the req.user object but don't include the password!
 };
 
 const updateUser = async (req, res) => {
