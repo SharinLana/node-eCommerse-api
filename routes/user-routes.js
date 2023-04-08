@@ -1,5 +1,6 @@
 const express = require("express");
 const authenticateUser = require("../middleware/authentication");
+const authorizeAdmin = require("../middleware/authorizeAdmin");
 const {
   getAllUsers,
   getSingleUser,
@@ -10,7 +11,7 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(authenticateUser, getAllUsers);
+router.route("/").get(authenticateUser, authorizeAdmin, getAllUsers);
 
 router.route("/showMe").get(showCurrentUser);
 router.route("/updateUser").post(updateUser);
