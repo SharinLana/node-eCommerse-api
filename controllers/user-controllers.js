@@ -29,7 +29,26 @@ const updateUser = async (req, res) => {
 };
 
 const updateUserPassword = async (req, res) => {
-  res.send("Update user password");
+  const { oldPassword, newPassword } = req.body;
+  if (!oldPassword || !newPassword) {
+    throw new BadRequestError("Please provide your old and new password!");
+  }
+
+  const user = await User.findOne({ _id: req.user.userId });
+  if (!user) {
+    throw new UnauthenticatedError(
+      `No user found with the id: ${req.user.userId}`
+    );
+  }
+
+  const isPasswordCorrect = await user.comparePassword(oldPassword);
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError("The old password is incorrect!");
+  }
+
+  user.password = newPassword;
+  await user.save();
+  res.status(StatusCodes.OK).json({ message: "Success! Password updated!" });
 };
 
 module.exports = {
