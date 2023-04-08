@@ -11,7 +11,7 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(authenticateUser, authorizeAdmin, getAllUsers);
+router.route("/").get(authenticateUser, authorizeAdmin("admin"), getAllUsers);
 
 router.route("/showMe").get(showCurrentUser);
 router.route("/updateUser").post(updateUser);
