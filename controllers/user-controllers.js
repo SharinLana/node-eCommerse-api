@@ -1,5 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
+const { attachCookiesToResponse } = require("../utils/jwt");
+const createTokenPayload = require("../utils/tokenPayload");
 const {
   BadRequestError,
   UnauthenticatedError,
@@ -25,7 +27,23 @@ const showCurrentUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  res.send("Update user");
+  const { name, email } = req.body;
+  if (!name || !email) {
+    throw new BadRequestError("Please provide your name and email!");
+  }
+
+  const upadtedUser = await User.findOneAndUpdate(
+    { _id: req.user.userId },
+    { email, name },
+    { new: true, runValidators: true }
+  );
+
+  const tokenPayload = createTokenPayload(upadtedUser);
+  attachCookiesToResponse({ res, tokenPayload });
+
+  res.status(StatusCodes.OK).json({
+    user: tokenPayload,
+  });
 };
 
 const updateUserPassword = async (req, res) => {
