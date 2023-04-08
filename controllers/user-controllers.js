@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
 const { attachCookiesToResponse } = require("../utils/jwt");
 const createTokenPayload = require("../utils/tokenPayload");
+const checkPermissions = require("../utils/checkPermissions");
 const {
   BadRequestError,
   UnauthenticatedError,
@@ -19,6 +20,9 @@ const getSingleUser = async (req, res) => {
   if (!user) {
     throw new NotFoundError(`No user with id: ${req.params.id}`);
   }
+
+  checkPermissions(req.user, user._id);
+
   res.status(StatusCodes.OK).json({ user });
 };
 // Checking if the user exists to direct him to the restricted route
