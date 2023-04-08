@@ -1,5 +1,11 @@
+const { PermissionDeniedError } = require("../errors/index");
+
 const authorizeAdmin = (req, res, next) => {
-  console.log("admin route");
+  if (req.user.role !== "admin") {
+    throw new PermissionDeniedError(
+      "You don't have permission to access this route!"
+    );
+  }
   next();
 };
 
