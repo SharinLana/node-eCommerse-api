@@ -12,6 +12,9 @@ const {
 
 const router = express.Router();
 
+router.route("/").get(getAllProducts).post(createProduct);
+router.route("/:id").get(getSingleProduct).patch(updateProduct).delete(deleteProduct);
+router.route("/uploadImage").post(uploadImage);
 
 
 module.exports = router;
