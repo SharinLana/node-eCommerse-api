@@ -12,9 +12,17 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAllProducts).post(createProduct);
-router.route("/:id").get(getSingleProduct).patch(updateProduct).delete(deleteProduct);
-router.route("/uploadImage").post(uploadImage);
-
+router
+  .route("/")
+  .get(getAllProducts)
+  .post(authenticateUser, authorizeAdmin("admin"), createProduct);
+router
+  .route("/:id")
+  .get(getSingleProduct)
+  .patch(authenticateUser, authorizeAdmin("admin"), updateProduct)
+  .delete(authenticateUser, authorizeAdmin("admin"), deleteProduct);
+router
+  .route("/uploadImage")
+  .post(authenticateUser, authorizeAdmin("admin"), uploadImage);
 
 module.exports = router;
