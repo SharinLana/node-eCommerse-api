@@ -1,4 +1,5 @@
 require("express-async-errors");
+const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const express = require("express");
@@ -25,6 +26,8 @@ const port = process.env.PORT || 5100;
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
+
+app.use(express.static(path.join(__dirname, "./public")));
 
 app.get("/api/v1", (req, res) => {
   // console.log(req.signedCookies)
