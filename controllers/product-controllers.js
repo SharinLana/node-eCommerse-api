@@ -1,4 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
+const path = require("path");
 const Product = require("../models/Product");
 const {
   BadRequestError,
@@ -53,14 +54,31 @@ const deleteProduct = async (req, res) => {
     );
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      message: `The product with the id ${req.params.id} has been deleted!`,
-    });
+  res.status(StatusCodes.OK).json({
+    message: `The product with the id ${req.params.id} has been deleted!`,
+  });
 };
 
 const uploadImage = async (req, res) => {
+  if (!req.files) {
+    throw new BadRequestError("No file uploaded!");
+  }
+
+  // if the type of uploaded fie is not the image
+  if (req.files.image.mimetype.startswith("image")) {
+    throw new BadRequestError("Please upload image!");
+  }
+
+  const maxSize = 1024 * 1024;
+
+  if (req.files.image.size > maxSize) {
+    throw new BadRequestError("Please upload image smaller that 1MB");
+  }
+
+  const imagePath = path.join(
+    __dirname,
+    "../public/uploads" + `${req.files.image.name}`
+  );
   res.send("Upload image");
 };
 
