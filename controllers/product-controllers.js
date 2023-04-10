@@ -3,10 +3,8 @@ const path = require("path");
 const Product = require("../models/Product");
 const {
   BadRequestError,
-  UnauthenticatedError,
   NotFoundError,
 } = require("../errors/index");
-const { propfind } = require("../routes/product-routes");
 
 const createProduct = async (req, res) => {
   req.body.user = req.user.userId; // defining the "user" property as required the Product model
