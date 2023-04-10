@@ -5,6 +5,7 @@ const {
   UnauthenticatedError,
   NotFoundError,
 } = require("../errors/index");
+const { propfind } = require("../routes/product-routes");
 
 const createProduct = async (req, res) => {
   req.body.user = req.user.userId; // defining the "user" property as required the Product model
@@ -18,7 +19,13 @@ const getAllProducts = async (req, res) => {
 };
 
 const getSingleProduct = async (req, res) => {
-  res.send("Get single product");
+  const product = await Product.findOne({ _id: req.params.id });
+  if (!product) {
+    throw new NotFoundError(
+      `Product with the id ${req.params.id} does not exist in the DB`
+    );
+  }
+  res.status(StatusCodes.OK).json({ product });
 };
 
 const updateProduct = async (req, res) => {
