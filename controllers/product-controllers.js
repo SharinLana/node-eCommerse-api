@@ -60,12 +60,14 @@ const deleteProduct = async (req, res) => {
 };
 
 const uploadImage = async (req, res) => {
+  // console.log(req.files);
+
   if (!req.files) {
     throw new BadRequestError("No file uploaded!");
   }
 
   // if the type of uploaded fie is not the image
-  if (req.files.image.mimetype.startswith("image")) {
+  if (!req.files.image.mimetype.startsWith("image")) {
     throw new BadRequestError("Please upload image!");
   }
 
@@ -77,9 +79,14 @@ const uploadImage = async (req, res) => {
 
   const imagePath = path.join(
     __dirname,
-    "../public/uploads" + `${req.files.image.name}`
+    "../public/uploads/" + `${req.files.image.name}`
   );
-  res.send("Upload image");
+
+  await req.files.image.mv(imagePath);
+
+  res
+    .status(StatusCodes.OK)
+    .json({ image: `/uploads/${req.files.image.name}` });
 };
 
 module.exports = {
