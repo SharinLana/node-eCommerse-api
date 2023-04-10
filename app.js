@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 dotenv.config();
@@ -27,7 +28,9 @@ if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
+// Serving static files and uploads
 app.use(express.static(path.join(__dirname, "./public")));
+app.use(fileUpload());
 
 app.get("/api/v1", (req, res) => {
   // console.log(req.signedCookies)
