@@ -21,6 +21,7 @@ app.use(fileUpload());
 
 const authRouter = require("./routes/auth-routes");
 const userRouter = require("./routes/user-routes");
+const reviewRouter = require("./routes/review-routes");
 const productRouter = require("./routes/product-routes");
 const notFound = require("./middleware/not-found");
 const errorHandler = require("./middleware/error-handler");
@@ -40,6 +41,7 @@ app.get("/api/v1", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1/reviews", reviewRouter);
 app.use(errorHandler);
 app.use(notFound);
 
