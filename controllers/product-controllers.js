@@ -46,7 +46,12 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  res.send("Delete product");
+  await Product.findByIdAndDelete({ _id: req.params.id });
+  res
+    .status(StatusCodes.OK)
+    .json({
+      message: `The product with the id ${req.params.id} has been deleted!`,
+    });
 };
 
 const uploadImage = async (req, res) => {
