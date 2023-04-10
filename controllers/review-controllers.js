@@ -33,11 +33,17 @@ const createReview = async (req, res) => {
 };
 
 const getAllReviews = async (req, res) => {
-  res.send("Get all reviews");
+  const reviews = await Review.find({});
+  res.status(StatusCodes.OK).json({ reviews, numberOfReviews: reviews.length });
 };
 
 const getSingleReview = async (req, res) => {
-  res.send("Single review");
+  const review = await Review.findOne({ _id: req.params.id });
+  if (!review) {
+    throw new NotFoundError(`No review with id ${req.params.id}`);
+  }
+  
+  res.status(StatusCodes.OK).json({ review });
 };
 
 const updateReview = async (req, res) => {
