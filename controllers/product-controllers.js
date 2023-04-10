@@ -7,11 +7,14 @@ const {
 } = require("../errors/index");
 
 const createProduct = async (req, res) => {
-  res.send("Create product");
+  req.body.user = req.user.userId; // defining the "user" property as required the Product model
+  const product = await Product.create(req.body);
+  res.status(StatusCodes.CREATED).json({ product });
 };
 
 const getAllProducts = async (req, res) => {
-  res.send("Get all products");
+  const products = await Product.find({});
+  res.status(StatusCodes.OK).json({ products, count: products.length });
 };
 
 const getSingleProduct = async (req, res) => {
