@@ -48,7 +48,22 @@ const getSingleReview = async (req, res) => {
 };
 
 const updateReview = async (req, res) => {
-  res.send("Update review");
+  const { title, rating, comment } = req.body;
+
+  const review = await Review.findOne({ _id: req.params.id });
+  if (!review) {
+    throw new NotFoundError(`No review with id ${req.params.id}`);
+  }
+
+  checkPermissions(req.user, review.user);
+
+  review.title = title;
+  review.rating = rating;
+  review.comment = comment;
+
+  await review.save();
+
+  res.status(StatusCodes.OK).json({ review });
 };
 
 const deleteReview = async (req, res) => {
