@@ -18,6 +18,8 @@ const getSingleProduct = async (req, res) => {
   const product = await Product.findOne({ _id: req.params.id }).populate(
     "review" // to see all the reviews of this product in the response
     //! but you can NOT query virtual properties!
+    //! find the alternative approach to get querable reviews in review-controllers.js
+    //! and product-routes.js
   );
   if (!product) {
     throw new NotFoundError(
