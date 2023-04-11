@@ -63,7 +63,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } } // to access product reviews
 );
 
 const Product = mongoose.model("Product", productSchema);
