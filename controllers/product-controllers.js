@@ -1,10 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const path = require("path");
 const Product = require("../models/Product");
-const {
-  BadRequestError,
-  NotFoundError,
-} = require("../errors/index");
+const { BadRequestError, NotFoundError } = require("../errors/index");
 
 const createProduct = async (req, res) => {
   req.body.user = req.user.userId; // defining the "user" property as required the Product model
@@ -18,7 +15,9 @@ const getAllProducts = async (req, res) => {
 };
 
 const getSingleProduct = async (req, res) => {
-  const product = await Product.findOne({ _id: req.params.id });
+  const product = await Product.findOne({ _id: req.params.id }).populate(
+    "review" // to see all the reviews of this product in the response
+  );
   if (!product) {
     throw new NotFoundError(
       `Product with the id ${req.params.id} does not exist in the DB`

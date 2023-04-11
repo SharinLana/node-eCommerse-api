@@ -66,6 +66,14 @@ const productSchema = new mongoose.Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } } // to access product reviews
 );
 
+// Setup the connection between the productSchema and reviewSchema
+productSchema.virtual("review", {
+  ref: "Review", // the model name
+  localField: "_id",
+  foreignField: "product", // the field from the reviewSchema,
+  justOne: false, // to get the list of reviews
+  // match: { rating: 5 }, // to het only those reviews that have rating 5
+});
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
