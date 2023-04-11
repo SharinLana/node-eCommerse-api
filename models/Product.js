@@ -74,6 +74,11 @@ productSchema.virtual("review", {
   justOne: false, // to get the list of reviews
   // match: { rating: 5 }, // to het only those reviews that have rating 5
 });
+
+productSchema.pre("remove", async function (next) {
+  await this.model("Review").deleteMany({ product: this._id });
+});
+
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
