@@ -17,6 +17,7 @@ const getAllProducts = async (req, res) => {
 const getSingleProduct = async (req, res) => {
   const product = await Product.findOne({ _id: req.params.id }).populate(
     "review" // to see all the reviews of this product in the response
+    //! but you can NOT query virtual properties!
   );
   if (!product) {
     throw new NotFoundError(
