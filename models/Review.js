@@ -1,3 +1,4 @@
+const e = require("express");
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
@@ -33,6 +34,20 @@ const reviewSchema = new mongoose.Schema(
 );
 // The user can make only 1 review per product
 reviewSchema.index({ product: 1, user: 1 }, { unique: true });
+
+reviewSchema.statics.calculateAvgRating = async function(productId) {
+
+}
+
+reviewSchema.post('save', async function() {
+  // this.constructor = reviewSchema
+  await this.constructor.calculateAvgRating(this.product)
+});
+
+reviewSchema.post('remove', async function() {
+  // this.constructor = reviewSchema
+  await this.constructor.calculateAvgRating(this.product)
+});
 
 const Review = mongoose.model("Review", reviewSchema);
 
