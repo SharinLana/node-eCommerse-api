@@ -47,12 +47,15 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  const product = await Product.findByIdAndDelete({ _id: req.params.id });
+  const product = await Product.findOne({ _id: req.params.id });
   if (!product) {
     throw new NotFoundError(
       `Product with the id ${req.params.id} does not exist`
     );
   }
+
+  await product.remove(); // the remove method allows to create a pre- middleware in the Product model 
+  // to remove not only the product but also all the reviews associated with it
 
   res.status(StatusCodes.OK).json({
     message: `The product with the id ${req.params.id} has been deleted!`,
