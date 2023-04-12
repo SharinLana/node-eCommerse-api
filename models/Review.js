@@ -35,18 +35,47 @@ const reviewSchema = new mongoose.Schema(
 // The user can make only 1 review per product
 reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
-reviewSchema.statics.calculateAvgRating = async function(productId) {
+reviewSchema.statics.calculateAvgRating = async function (productId) {
+  const result = await this.aggregate([
+    { $match: { product: productId } },
+    {
+      $group: {
+        _id: productId,
+        averageRating: { $avg: "$rating" },
+        numOfReviews: { $sum: 1 },
+      },
+    },
+  ]);
 
-}
+  /* console.log(result); [
+  {
+    _id: new ObjectId("64347f9f169a97fa9a1a6cda"),
+    averageRating: 3.3333333333333335,
+    numOfReviews: 3
+  }
+]*/
 
-reviewSchema.post('save', async function() {
+  try {
+    await this.model("Product").findOneAndUpdate(
+      { _id: productId },
+      {
+        averageRating: Math.ceil(result[0]?.averageRating || 0), // ? is for optional chaining
+        numOfReviews: Math.ceil(result[0]?.numOfReviews || 0),
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+reviewSchema.post("save", async function () {
   // this.constructor = reviewSchema
-  await this.constructor.calculateAvgRating(this.product)
+  await this.constructor.calculateAvgRating(this.product);
 });
 
-reviewSchema.post('remove', async function() {
+reviewSchema.post("remove", async function () {
   // this.constructor = reviewSchema
-  await this.constructor.calculateAvgRating(this.product)
+  await this.constructor.calculateAvgRating(this.product);
 });
 
 const Review = mongoose.model("Review", reviewSchema);
