@@ -5,7 +5,6 @@ const checkPermissions = require("../utils/checkPermissions");
 const {
   BadRequestError,
   NotFoundError,
-  PermissionDeniedError,
 } = require("../errors/index");
 
 const fakeStripeAPI = async ({ amount, currency }) => {
