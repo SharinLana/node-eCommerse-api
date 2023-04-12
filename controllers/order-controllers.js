@@ -1,7 +1,11 @@
 const { StatusCodes } = require("http-status-codes");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
-const { BadRequestError, NotFoundError } = require("../errors/index");
+const {
+  BadRequestError,
+  NotFoundError,
+  PermissionDeniedError,
+} = require("../errors/index");
 
 const fakeStripeAPI = async ({ amount, currency }) => {
   const client_secret = "someRandomeValue";
@@ -9,7 +13,8 @@ const fakeStripeAPI = async ({ amount, currency }) => {
 };
 
 const getAllOrders = async (req, res) => {
-  res.send("Get all orders");
+  const orders = await Order.find({});
+  res.status(StatusCodes.OK).json({ count: orders.length, orders });
 };
 
 const getSingleOrder = async (req, res) => {
