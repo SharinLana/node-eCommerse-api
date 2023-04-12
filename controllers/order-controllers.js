@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const checkPermissions = require("../utils/checkPermissions");
 const {
   BadRequestError,
   NotFoundError,
@@ -18,7 +19,13 @@ const getAllOrders = async (req, res) => {
 };
 
 const getSingleOrder = async (req, res) => {
-  res.send("Get Single order");
+  const order = await Order.findOne({ _id: req.params.id });
+  if (!order) {
+    throw new NotFoundError(`No order with id: ${req.params.id}`);
+  }
+  checkPermissions(req.user, order.user);
+
+  res.status(StatusCodes.OK).json({ order });
 };
 
 const getCurrentUserOrders = async (req, res) => {
