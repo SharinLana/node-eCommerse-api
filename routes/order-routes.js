@@ -15,10 +15,11 @@ router
   .route("/")
   .get(authenticateUser, authorizeAdmin("admin"), getAllOrders)
   .post(authenticateUser, createOrder);
+router.route("/showAllMyOrders").get(authenticateUser, getCurrentUserOrders);
 router
   .route("/:id")
   .get(authenticateUser, getSingleOrder)
   .patch(authenticateUser, updateOrder);
-router.route("/showAllMyOrders").get(authenticateUser, getCurrentUserOrders);
+
 
 module.exports = router;
