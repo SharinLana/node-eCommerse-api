@@ -1,6 +1,6 @@
 # E-Commerce API
 
-> This is a backend of a typical e-commerce application that allows a user to authorize, view and select products, leave a product review, place an order.
+> This is the backend of a typical e-commerce application that allows a user to authorize, view and select products, leave a product review, place an order.
 
 ### The goals of creating this application:
 
