@@ -6,10 +6,28 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+// security packages
+const rateLimiter = require("express-rate-limit");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const cors = require("cors");
+const mongoSanitize = require("express-mongo-sanitize");
 
 const app = express();
 dotenv.config();
 mongoose.set("strictQuery", true);
+
+app.set("trust proxy", 1);
+app.use(
+  rateLimiter({
+    windowMs: 1000 * 60 * 15, // 15 minutes 
+    max: 60,
+  })
+);
+app.use(helmet());
+app.use(cors());
+app.use(xss());
+app.use(mongoSanitize())
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
